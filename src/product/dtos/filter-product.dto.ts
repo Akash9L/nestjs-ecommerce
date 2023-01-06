@@ -1,9 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class FilterProductDTO {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   search: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   category: string;
 }
