@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Cart } from 'src/cart/schemas/cart.schema';
+import { Item } from 'src/cart/schemas/item.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { OrderStatus } from '../enums/order-status.enum';
 import { PaymentModes } from '../enums/payment-mode.enum';
@@ -13,8 +13,11 @@ export class Order {
   @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
   user: User;
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: Cart.name })
-  cartId: Cart;
+  @Prop()
+  items: Item[];
+
+  @Prop()
+  totalPrice: number;
 
   @Prop({ default: OrderStatus.CREATED })
   orderStatus: OrderStatus;

@@ -2,11 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CartService } from 'src/cart/cart.service';
-import { CartStatus } from 'src/cart/enums/cart-status.dto';
 import { CreateOrderDTO } from './dtos/create-order.dto';
 import { UpdateorderDto } from './dtos/update-order.dto';
-import { OrderStatus } from './enums/order-status.enum';
-import { PaymentStatus } from './enums/payment-status.enum';
 import { Order, OrderDocument } from './schemas/order.schema';
 
 @Injectable()
@@ -18,19 +15,31 @@ export class OrderService {
   ) {}
 
   async getAllOrders(): Promise<Order[]> {
-    const orders = await this.orderModel.find();
+    const orders = await this.orderModel.find().populate('user', 'username');
     return orders;
   }
 
   async getAllOrdersForUser(userId: string): Promise<Order[]> {
-    const orders = await this.orderModel.find({
-      user: userId,
-    });
+    const orders = await this.orderModel
+      .find({
+        user: userId,
+      })
+      .populate('user', 'username');
     return orders;
   }
 
   async getOrder(id: string): Promise<Order> {
-    const order = await this.orderModel.findById(id);
+    const order = await this.orderModel.findById(id).catch((error) => {
+      console.log(error);
+      throw error;
+    });
+    return order;
+  }
+
+  async getOrderDetails(id: string): Promise<Order> {
+    const order = await this.orderModel
+      .findById(id)
+      .populate('user', 'username');
     return order;
   }
 
@@ -38,13 +47,12 @@ export class OrderService {
     createOrderDTO: CreateOrderDTO,
     userId: string,
   ): Promise<Order> {
-    const cart = await this.cartService.updateCartStatus(
-      createOrderDTO.cartId,
-      CartStatus.LOCKED,
-    );
+    const cart = await this.cartService.getCartById(createOrderDTO.cartId);
+    delete createOrderDTO.cartId;
     const newOrder = await this.orderModel.create({
       ...createOrderDTO,
       user: userId,
+      items: cart.items,
     });
     return newOrder.save();
   }

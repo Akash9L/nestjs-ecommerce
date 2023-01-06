@@ -36,16 +36,6 @@ export class OrderController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.USER)
-  @Get('/:id')
-  async getProduct(@Param('id') id: string) {
-    const order = await this.orderService.getOrder(id);
-    if (!order) throw new NotFoundException('Order does not exist!');
-    return order;
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER)
   @Post('/')
   async creatOrder(@Request() req, @Body() createOrderDTO: CreateOrderDTO) {
     const user = req.user;
@@ -59,12 +49,32 @@ export class OrderController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.USER)
+  @Get('/:id')
+  async getOrder(@Param('id') id: string) {
+    const order = await this.orderService.getOrder(id);
+    if (!order) throw new NotFoundException('Order does not exist!');
+    return order;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.USER)
   @Put('/:id')
   async updateProduct(
     @Param('id') id: string,
     @Body() updateorderDto: UpdateorderDto,
   ) {
     const order = await this.orderService.updateOrder(id, updateorderDto);
+    if (!order) throw new NotFoundException('Order does not exist!');
+    return order;
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.USER)
+  @Get('/:id/details')
+  async getOrderDetails(@Param('id') id: string) {
+    const order = await this.orderService.getOrderDetails(id);
     if (!order) throw new NotFoundException('Order does not exist!');
     return order;
   }
