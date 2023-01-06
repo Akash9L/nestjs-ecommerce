@@ -1,0 +1,5 @@
+export enum PaymentModes {
+  UPI = 'UPI',
+  NETBANKING = 'NETBANKING',
+  CASHONDELIVERY = 'CASHONDELIVERY',
+}
