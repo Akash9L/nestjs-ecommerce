@@ -29,10 +29,7 @@ export class OrderService {
   }
 
   async getOrder(id: string): Promise<Order> {
-    const order = await this.orderModel.findById(id).catch((error) => {
-      console.log(error);
-      throw error;
-    });
+    const order = await this.orderModel.findById(id);
     return order;
   }
 
