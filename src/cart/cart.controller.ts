@@ -45,21 +45,21 @@ export class CartController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.USER)
-  @Delete('/item/:id')
-  async removeItemFromCart(@Request() req, @Param('id') productId: string) {
-    const userId = req.user.userId;
-    const cart = await this.cartService.removeItemFromCart(userId, productId);
-    if (!cart) throw new NotFoundException('Item does not exist');
+  @Delete('/:id')
+  async deleteCart(@Param('id') userId: string) {
+    const cart = await this.cartService.deleteCart(userId);
+    if (!cart) throw new NotFoundException('Cart does not exist');
     return cart;
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.USER)
-  @Delete('/:id')
-  async deleteCart(@Param('id') userId: string) {
-    const cart = await this.cartService.deleteCart(userId);
-    if (!cart) throw new NotFoundException('Cart does not exist');
+  @Delete('/item/:id')
+  async removeItemFromCart(@Request() req, @Param('id') productId: string) {
+    const userId = req.user.userId;
+    const cart = await this.cartService.removeItemFromCart(userId, productId);
+    if (!cart) throw new NotFoundException('Item does not exist');
     return cart;
   }
 }

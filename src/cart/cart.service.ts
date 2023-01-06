@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cart, CartDocument } from './schemas/cart.schema';
 import { ItemDTO } from './dtos/item.dto';
 import { ProductService } from 'src/product/product.service';
-import { CartStatus } from './enums/cart-status.dto';
 
 @Injectable()
 export class CartService {
@@ -19,36 +18,17 @@ export class CartService {
     subTotalPrice: number,
     totalPrice: number,
   ): Promise<Cart> {
-    const cart = await this.cartModel.findOne({
-      userId: userId,
-      status: CartStatus.ACTIVE,
+    const newCart = await this.cartModel.create({
+      userId,
+      items: [{ ...itemDTO, subTotalPrice }],
+      totalPrice,
     });
-
-    if (!cart) {
-      const newCart = await this.cartModel.create({
-        userId,
-        items: [{ ...itemDTO, subTotalPrice }],
-        totalPrice,
-      });
-      return newCart;
-    } else {
-      const oldCart = await this.addItemToCart(userId, itemDTO);
-      return oldCart;
-    }
+    return newCart;
   }
 
   async getCartById(id: string): Promise<CartDocument> {
     const cart = await this.cartModel.findById(id);
     return cart;
-  }
-
-  async updateCartStatus(id: string, status: CartStatus): Promise<Cart> {
-    const updatedCart = await this.cartModel.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true },
-    );
-    return updatedCart;
   }
 
   async getCartForUser(userId: string): Promise<CartDocument> {
