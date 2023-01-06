@@ -8,6 +8,9 @@ export class CreateUserDTO {
   email: string;
   @ApiProperty()
   password: string;
-  @ApiProperty()
+  @ApiProperty({
+    isArray: true,
+    enum: Role,
+  })
   roles: Role[];
 }
