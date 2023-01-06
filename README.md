@@ -24,7 +24,12 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Nestjs Ecommerce app demo. Can be used as a boiler-plate.
+Uses MongoDB as database.
+
+## Pre-requisites
+Create a free cluster on MongoDB Atlas and add the connection URI to env file.
+Generate a JWT Secret key from [RandomKeyGen](https://randomkeygen.com/) and add it to env file.  
 
 ## Installation
 
